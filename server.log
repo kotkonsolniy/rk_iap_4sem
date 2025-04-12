@@ -1,0 +1,4 @@
+2025-04-12 13:09:58,653 - INFO - TCP Server started on 127.0.0.1:12345
+2025-04-12 13:24:27,221 - INFO - UDP Server started on 127.0.0.1:12345
+2025-04-12 13:24:43,290 - ERROR - Invalid message from 127.0.0.1:39541: Invalid protocol header
+2025-04-12 13:24:53,527 - ERROR - Invalid message from 127.0.0.1:50070: Invalid protocol header
