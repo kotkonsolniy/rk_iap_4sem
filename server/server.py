@@ -1,9 +1,9 @@
-import socket
-import logging
-from protocol import *
+import socket #для работы с udp
+import logging #логирован ие
+from protocol import * #для работы с протоколом
 from .config import parse_args, setup_logging
 
-
+#обработка входящего udp сообщения
 def handle_udp_message(sock):
     data, addr = sock.recvfrom(MESSAGE_LENGTH)
     try:
@@ -24,11 +24,11 @@ def handle_udp_message(sock):
         print(f"Сервером получено некорректное сообщение от клиента с ip: {addr[0]}, port: {addr[1]}")
         sock.sendto(create_invalid_response(), addr)
 
-
+#запуск сервера
 def run_server():
     setup_logging()
     args = parse_args()
-
+    #создание udp сокета
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.bind((args.host, args.port))
         logging.info(f"UDP Server started on {args.host}:{args.port}")

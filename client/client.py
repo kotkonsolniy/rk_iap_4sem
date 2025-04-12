@@ -1,15 +1,15 @@
-import socket
+import socket #тут импорты аналогичные в сервере
 import logging
 from protocol import *
 from .config import parse_args, setup_logging
 
-
+#создает udp сокет, формирует и отправляет сообщение, разбирает ответ и проверяет его, если все верно то урааа
 def send_udp_message(host, port, number):
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         message = create_message(number)
         s.sendto(message, (host, port))
 
-        s.settimeout(5)  # Таймаут 5 секунд
+        s.settimeout(5)  # таймаут 5 секунд
         try:
             response, _ = s.recvfrom(MESSAGE_LENGTH)
             try:
@@ -29,7 +29,7 @@ def send_udp_message(host, port, number):
             logging.error("No response from server")
             print("Клиентом не получен ответ от сервера (таймаут).")
 
-
+#проверка числа
 def run_client():
     setup_logging()
     args = parse_args()
@@ -41,6 +41,6 @@ def run_client():
 
     send_udp_message(args.host, args.port, args.number)
 
-
+#запуск клиента
 if __name__ == "__main__":
     run_client()
