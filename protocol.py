@@ -1,23 +1,22 @@
+#реализуем работу  с протоколом DUMMY_PROTOCOL
 import struct
 from datetime import datetime
 
-BMSTU_PROTOCOL_HEADER = b'BMSTU_PROTOCOL\x00\x00\x00'
+BMSTU_PROTOCOL_HEADER = b'BMSTU_PROTOCOL\x00\x00\x00' #можно сделать b'BMSTU_PROTOCOL\x00\x00, тогда в 16 уложимся))
 DATE_FORMAT = "%d%m%Y"
-HEADER_LENGTH = 16
-DATE_LENGTH = 8
-NUMBER_LENGTH = 4
-MESSAGE_LENGTH = HEADER_LENGTH + DATE_LENGTH + NUMBER_LENGTH
+HEADER_LENGTH = 17 #BMSTU protocol это 14 байт, \x00\x00\xoo 3 байта 14+3 = 17, поэтому нужно ожидать 17 а не 16
+DATE_LENGTH = 8 #длина поля даты
+NUMBER_LENGTH = 4 #длина числового поля
+MESSAGE_LENGTH = HEADER_LENGTH + DATE_LENGTH + NUMBER_LENGTH #общая длина сообщения 29 байт
 
-
+#функция получения текущей даты
 def create_message(number: int) -> bytes:
-    """Создает сообщение по протоколу DUMMY_PROTOCOL"""
     current_date = datetime.now().strftime(DATE_FORMAT).encode('ascii')
-    number_bytes = struct.pack('>I', number)  # uint32 big-endian
+    number_bytes = struct.pack('>I', number)  # uint32
     return BMSTU_PROTOCOL_HEADER + current_date + number_bytes
 
-
+#проверяет длину сообщения извлекает и проверяет заголовок
 def parse_message(message: bytes) -> dict:
-    """Парсит сообщение по протоколу DUMMY_PROTOCOL"""
     if len(message) != MESSAGE_LENGTH:
         raise ValueError("Invalid message length")
 
@@ -39,8 +38,7 @@ def parse_message(message: bytes) -> dict:
         'number': number
     }
 
-
+#создает сообщение об ошибке
 def create_invalid_response() -> bytes:
-    """Создает сообщение об ошибке"""
     return b'INVALID_PROTOCOL' + bytes(HEADER_LENGTH - len('INVALID_PROTOCOL')) + b'\x00' * (
                 DATE_LENGTH + NUMBER_LENGTH)
